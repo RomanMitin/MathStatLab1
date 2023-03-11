@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,10 +20,17 @@ namespace MathStatLab1
         {
             InitializeComponent();
 
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+
+            simClass = new SimClass();
+
             simClass.time = double.Parse(TimeTextBox.Text);
             simClass.lambda = double.Parse(LambdaTextBox.Text);
             simClass.n = UInt32.Parse(ntextBox.Text);
+
         }
+
+        
 
         private void TimeTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -57,10 +66,29 @@ namespace MathStatLab1
 
             var result = simClass.simulate();
 
+            double MaxDiffProb = 0.0;
             foreach (var item in result)
             {
-                ResultTable.Rows.Add(item.Key, item.Value, (double)item.Value / simClass.n);
+                double prob = simClass.getProbability(item.Key);
+                double Frequency = (double)item.Value / simClass.n;
+                ResultTable.Rows.Add(item.Key, item.Value, Frequency, prob);
+                MaxDiffProb = Math.Max(Math.Abs(Frequency - prob), MaxDiffProb);
             }
+            MaxDiffProbTextBox.Text = MaxDiffProb.ToString();
+
+            double tmp;
+            double trueLambda = simClass.lambda * simClass.time;
+
+            NumericalParam[0, 0].Value = trueLambda.ToString(); 
+            tmp = simClass.GetX();
+            NumericalParam[1, 0].Value = tmp.ToString();
+            NumericalParam[2, 0].Value = Math.Abs(tmp - trueLambda);
+            NumericalParam[3, 0].Value = trueLambda.ToString();
+            tmp = simClass.GetS2();
+            NumericalParam[4, 0].Value = tmp;
+            NumericalParam[5, 0].Value = Math.Abs(tmp - trueLambda);
+            NumericalParam[6, 0].Value = simClass.GetMe();
+            NumericalParam[7, 0].Value = simClass.GetR();
         }
     }
 }
