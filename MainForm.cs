@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MathStatLab1
 {
@@ -89,6 +90,19 @@ namespace MathStatLab1
             NumericalParam[5, 0].Value = Math.Abs(tmp - trueLambda);
             NumericalParam[6, 0].Value = simClass.GetMe();
             NumericalParam[7, 0].Value = simClass.GetR();
+
+            DistrFunctionsChart.Series.Clear();
+
+            Series trueDistrFunc = simClass.getTrueDistSeries();
+            Series StatDistrFunc = simClass.getStatDistSeries();
+            trueDistrFunc.BorderWidth = 2;
+            StatDistrFunc.BorderWidth = 2;
+            trueDistrFunc.ChartType = SeriesChartType.StepLine;
+            StatDistrFunc.ChartType = SeriesChartType.StepLine;
+
+
+            DistrFunctionsChart.Series.Add(trueDistrFunc);
+            DistrFunctionsChart.Series.Add(StatDistrFunc);
         }
     }
 }

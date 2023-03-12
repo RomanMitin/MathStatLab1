@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MathStatLab1
 {
@@ -12,12 +15,12 @@ namespace MathStatLab1
         public double time;
         public double lambda;
         public UInt32 n;
-        SortedDictionary<int, int> result;
+        SortedDictionary<int, int> resultSelection;
 
         private double X;
 
 
-        private const int fact_size = 100;
+        private const int fact_size = 170;
         private double[] factorials = new double[fact_size];
 
         public SimClass()
@@ -39,32 +42,32 @@ namespace MathStatLab1
         public SortedDictionary<int, int> simulate()
         {
             Random random = new Random();
-            result = new SortedDictionary<int, int>();
+            resultSelection = new SortedDictionary<int, int>();
 
             for (int i = 0;i < n; i++)
             {
                 int RandomVarValue = GetRandomVarValue(random.NextDouble(), lambda * time);
                 int tmp_val;
 
-                if (result.TryGetValue(RandomVarValue, out tmp_val))
+                if (resultSelection.TryGetValue(RandomVarValue, out tmp_val))
                 {
-                    result[RandomVarValue]++;
+                    resultSelection[RandomVarValue]++;
                 }
                 else
                 {
-                    result.Add(RandomVarValue, 1);
+                    resultSelection.Add(RandomVarValue, 1);
                 }
 
             }
 
-            return result;
+            return resultSelection;
         }
 
         public double GetX()
         {
             Int64 sum = 0;
 
-            foreach (var item in result)
+            foreach (var item in resultSelection)
             {
                 sum += item.Key * item.Value;
             }
@@ -92,7 +95,7 @@ namespace MathStatLab1
         public double GetS2()
         {
             double tmp = 0;
-            foreach (var item in result)
+            foreach (var item in resultSelection)
             {
                 tmp += item.Value * (item.Key - X) * (item.Key - X);
             }
@@ -104,27 +107,87 @@ namespace MathStatLab1
 
         internal int GetR()
         {
-            return result.Last().Key - result.First().Key;
+            return resultSelection.Last().Key - resultSelection.First().Key;
         }
 
         internal double GetMe()
         {
-            int size = result.Count;
+            int size = resultSelection.Count;
             if(size % 2 == 1)
             {
-                return result.ElementAt(size / 2).Key;
+                return resultSelection.ElementAt(size / 2).Key;
             }
             else
             {
-                return (result.ElementAt(size / 2).Key + result.ElementAt(size / 2 - 1).Key) / 2.0;
+                return (resultSelection.ElementAt(size / 2).Key + resultSelection.ElementAt(size / 2 - 1).Key) / 2.0;
             }
         }
 
         internal double getProbability(int k)
         {
+            if(k >= fact_size)
+            {
+                return 0.0;
+            }
+
             double trueLambda = lambda * time;
 
+            
+
             return (Math.Pow(trueLambda, k) / factorials[k]) * Math.Exp(-trueLambda);
+        }
+
+        internal Series getTrueDistSeries()
+        {
+            const double EPS = 1e-3;
+
+            Series result = new Series("Teoretical distribution");
+
+            double trueLamda = lambda * time;
+
+            double cur_val = 0.0;
+            int x = -1;
+
+            double coef = Math.Exp(-trueLamda);
+
+            result.Points.AddXY(x, cur_val);
+
+            while (cur_val < 1.0 - EPS && x < fact_size - 1)
+            {
+                x++;
+                double expResult = Math.Pow(trueLamda, x);
+                if(double.IsInfinity(expResult))
+                {
+                    break;
+                }
+
+                cur_val += coef * expResult / factorials[x];
+
+                result.Points.AddXY(x, cur_val);
+            }
+
+            return result;
+        }
+
+        internal Series getStatDistSeries()
+        {
+            Series result = new Series("Experimental distribution");
+
+            result.Points.AddXY(-1, 0);
+
+            double cur_val = 0.0;
+
+            foreach (var item in resultSelection)
+            {
+                cur_val += Convert.ToDouble(item.Value) / n;
+                if(cur_val >= 1.0)
+                {
+                    cur_val = 1.0 - 1e-9;
+                }
+                result.Points.AddXY(item.Key, cur_val);
+            }
+
+            return result;
         }
     }
 }

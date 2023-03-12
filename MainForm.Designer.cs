@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.label1 = new System.Windows.Forms.Label();
             this.TimeTextBox = new System.Windows.Forms.TextBox();
             this.LambdaTextBox = new System.Windows.Forms.TextBox();
@@ -36,6 +38,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.StartButton = new System.Windows.Forms.Button();
             this.ResultTable = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NumericalParam = new System.Windows.Forms.DataGridView();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,14 +51,12 @@
             this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MaxDiffProbTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.DistrFunctionsChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.ResultTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericalParam)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DistrFunctionsChart)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -133,8 +137,32 @@
             this.dataGridViewTextBoxColumn1});
             this.ResultTable.Location = new System.Drawing.Point(150, 27);
             this.ResultTable.Name = "ResultTable";
-            this.ResultTable.Size = new System.Drawing.Size(268, 302);
+            this.ResultTable.Size = new System.Drawing.Size(244, 359);
             this.ResultTable.TabIndex = 8;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Y";
+            this.Column1.Name = "Column1";
+            this.Column1.Width = 50;
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Ni";
+            this.Column2.Name = "Column2";
+            this.Column2.Width = 50;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "Ni/N";
+            this.Column3.Name = "Column3";
+            this.Column3.Width = 50;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.HeaderText = "P(Y)";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Width = 50;
             // 
             // NumericalParam
             // 
@@ -148,7 +176,7 @@
             this.Column9,
             this.Column10,
             this.Column11});
-            this.NumericalParam.Location = new System.Drawing.Point(17, 353);
+            this.NumericalParam.Location = new System.Drawing.Point(12, 401);
             this.NumericalParam.Name = "NumericalParam";
             this.NumericalParam.ReadOnly = true;
             this.NumericalParam.Size = new System.Drawing.Size(453, 81);
@@ -210,33 +238,9 @@
             this.Column11.ReadOnly = true;
             this.Column11.Width = 50;
             // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Y";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 50;
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Ni";
-            this.Column2.Name = "Column2";
-            this.Column2.Width = 50;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Ni/N";
-            this.Column3.Name = "Column3";
-            this.Column3.Width = 50;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.HeaderText = "P(Y)";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Width = 50;
-            // 
             // MaxDiffProbTextBox
             // 
-            this.MaxDiffProbTextBox.Location = new System.Drawing.Point(434, 55);
+            this.MaxDiffProbTextBox.Location = new System.Drawing.Point(12, 342);
             this.MaxDiffProbTextBox.Name = "MaxDiffProbTextBox";
             this.MaxDiffProbTextBox.Size = new System.Drawing.Size(130, 20);
             this.MaxDiffProbTextBox.TabIndex = 10;
@@ -245,17 +249,36 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(435, 27);
+            this.label4.Location = new System.Drawing.Point(8, 307);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(129, 20);
             this.label4.TabIndex = 11;
             this.label4.Text = "Max ( |nj/n - Pj | ):";
             // 
+            // DistrFunctionsChart
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.DistrFunctionsChart.ChartAreas.Add(chartArea1);
+            legend1.BorderColor = System.Drawing.Color.Black;
+            legend1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            legend1.HeaderSeparator = System.Windows.Forms.DataVisualization.Charting.LegendSeparatorStyle.ThickLine;
+            legend1.IsTextAutoFit = false;
+            legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
+            legend1.Name = "Legend1";
+            legend1.TextWrapThreshold = 10;
+            this.DistrFunctionsChart.Legends.Add(legend1);
+            this.DistrFunctionsChart.Location = new System.Drawing.Point(412, 27);
+            this.DistrFunctionsChart.Name = "DistrFunctionsChart";
+            this.DistrFunctionsChart.Size = new System.Drawing.Size(494, 359);
+            this.DistrFunctionsChart.TabIndex = 12;
+            this.DistrFunctionsChart.Text = "Cumulative distribution functions";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 545);
+            this.ClientSize = new System.Drawing.Size(920, 545);
+            this.Controls.Add(this.DistrFunctionsChart);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.MaxDiffProbTextBox);
             this.Controls.Add(this.NumericalParam);
@@ -271,6 +294,7 @@
             this.Text = "MathStatLab1";
             ((System.ComponentModel.ISupportInitialize)(this.ResultTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericalParam)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DistrFunctionsChart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -301,6 +325,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.TextBox MaxDiffProbTextBox;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.DataVisualization.Charting.Chart DistrFunctionsChart;
     }
 }
 
